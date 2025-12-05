@@ -12,7 +12,7 @@ class TopicsList extends StatefulWidget {
   State<TopicsList> createState() => _TopicsListState();
 }
 
-class _TopicsListState extends State<TopicsList> {
+class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMixin<TopicsList> {
   List<TopicItem> topicsList = [];
   int _page = 1;
   final int _limit = 20;
@@ -83,6 +83,7 @@ class _TopicsListState extends State<TopicsList> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_isLoading && topicsList.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -101,6 +102,7 @@ class _TopicsListState extends State<TopicsList> {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.builder(
+        key: PageStorageKey('topics_${widget.tab}'),
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         itemCount: topicsList.length + 1,
@@ -257,6 +259,9 @@ class _TopicsListState extends State<TopicsList> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
