@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cnode_app/pages/main/index.dart';
 import 'package:flutter_cnode_app/pages/login.dart';
+import 'package:flutter_cnode_app/pages/topic_detail.dart';
 
 class AppEnter extends StatefulWidget {
   const AppEnter({super.key});
@@ -21,6 +22,16 @@ class _AppEnterState extends State<AppEnter> {
       routes: {
         '/': (context) => MainPage(),
         '/login': (context) => LoginPage(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/topic_detail') {
+          final id = settings.arguments as String?;
+          return MaterialPageRoute(
+            builder: (context) => TopicDetailPage(id: id ?? ''),
+            settings: settings,
+          );
+        }
+        return null;
       },
     );
   }
