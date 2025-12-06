@@ -14,8 +14,8 @@ class _HomeViewState extends State<HomeView>
   // tabbar controller
   late TabController _tabController;
 
-  List<Tab> tabs = [Tab(text: '全部'), Tab(text: '精华'), Tab(text: '分享')];
-  final List<String> _tabCodes = ['all', 'good', 'share'];
+  List<Tab> tabs = [Tab(text: '全部'), Tab(text: '精华'), Tab(text: '分享'),Tab(text: '问答')];
+  final List<String> _tabCodes = ['all', 'good', 'share', 'ask'];
 
 
   Widget _getTabBars() {
