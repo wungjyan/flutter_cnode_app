@@ -22,28 +22,38 @@ class HttpUtils {
           return handler.next(options);
         },
         onResponse: (response, handler) {
-          if (response.statusCode! >= 200 && response.statusCode! < 300) {
-            return handler.next(response);
+          final statusCode = response.statusCode ?? 0;
+          if (statusCode >= 200 && statusCode < 300) {
+            final data = response.data;
+            final isOk = data is Map && (data['success'] == true);
+            if (isOk) {
+              return handler.next(response);
+            }
+            final serverMsg = _extractServerError(data);
+            return handler.reject(
+              DioException(
+                requestOptions: response.requestOptions,
+                response: response,
+                type: DioExceptionType.badResponse,
+                message: serverMsg.isNotEmpty ? serverMsg : '请求失败',
+              ),
+            );
           }
-          final code = response.statusCode ?? 0;
           final statusMsg = response.statusMessage ?? '';
-          final serverMsg = response.data?['error_msg'] ?? '';
-          final msg = serverMsg.isNotEmpty
-              ? serverMsg
-              : 'HTTP $code $statusMsg';
-          handler.next(
+          final serverMsg = _extractServerError(response.data);
+          return handler.reject(
             DioException(
               requestOptions: response.requestOptions,
               response: response,
               type: DioExceptionType.badResponse,
-              message: msg,
-            ) as Response<dynamic>,
+              message: serverMsg.isNotEmpty ? serverMsg : 'HTTP $statusCode $statusMsg',
+            ),
           );
         },
         onError: (e, handler) {
-          final serverMsg = e.response?.data?['error_msg'] ?? '';
+          final serverMsg = _extractServerError(e.response?.data);
           final friendlyMsg = _buildFriendlyMessage(e, serverMsg);
-          handler.next(
+          return handler.reject(
             DioException(
               requestOptions: e.requestOptions,
               response: e.response,
@@ -55,6 +65,16 @@ class HttpUtils {
         },
       ),
     );
+  }
+
+  String _extractServerError(dynamic data) {
+    if (data is Map) {
+      final msg = data['error_msg'];
+      if (msg is String && msg.isNotEmpty) return msg.trim();
+      final generic = data['message'];
+      if (generic is String && generic.isNotEmpty) return generic.trim();
+    }
+    return '';
   }
 
   String _buildFriendlyMessage(DioException e, String serverMsg) {
@@ -84,11 +104,13 @@ class HttpUtils {
 
   get(String url, {Map<String, dynamic>? queryParameters}) async {
     try {
-      Response<dynamic> response = await _dio.get(
-        url,
-        queryParameters: queryParameters,
-      );
-      return response.data;
+      final response = await _dio.get(url, queryParameters: queryParameters);
+      final data = response.data;
+      if (data is Map && data['success'] == true) {
+        return data['data'];
+      }
+      final msg = _extractServerError(data);
+      return msg.isNotEmpty ? msg : '请求失败';
     } catch (e) {
       if (e is DioException) {
         return e.message ?? e.toString();
