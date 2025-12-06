@@ -35,10 +35,11 @@ class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMi
       'page': _page,
       'limit': _limit,
     });
+    topicsList.clear();
     if (!mounted) return;
-    if (res is Map && res["data"] is List) {
+    if (res is List) {
       final List<TopicItem> newItems = List<Map<String, dynamic>>.from(
-        res["data"],
+        res,
       ).map((item) => TopicItem.fromJson(item)).toList();
       setState(() {
         if (_page == 1) {
@@ -53,13 +54,12 @@ class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMi
     } else {
       setState(() {
         _isLoading = false;
-        _error = '加载失败';
+        _error = res is String ? res : '加载失败';
       });
     }
   }
 
   Future<void> _onRefresh() async {
-    topicsList.clear();
     await getList(refresh: true);
   }
 
@@ -102,7 +102,7 @@ class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMi
       onRefresh: _onRefresh,
       child: ListView.builder(
         key: PageStorageKey('topics_${widget.tab}'),
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         controller: _scrollController,
         itemCount: topicsList.length + 1,
         itemBuilder: (context, index) {
@@ -119,7 +119,7 @@ class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMi
             );
           }
           final item = topicsList[index];
-          return TopicCard(topic: item);
+          return TopicCard(topic: item, tab: widget.tab);
         },
       ),
     );
