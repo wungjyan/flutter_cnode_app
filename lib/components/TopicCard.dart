@@ -5,7 +5,8 @@ import 'package:flutter_cnode_app/utils/formatDate.dart';
 
 class TopicCard extends StatefulWidget {
   final TopicItem topic;
-  const TopicCard({super.key, required this.topic});
+  final String tab;
+  const TopicCard({super.key, required this.topic, required this.tab});
 
   @override
   State<TopicCard> createState() => _TopicCardState();
@@ -16,8 +17,21 @@ class _TopicCardState extends State<TopicCard> {
   Widget build(BuildContext context) {
     final topic = widget.topic;
     final avatarUrl = topic.author.avatarUrl;
-    final tagLabel = topic.top ? '置顶' : (topic.good ? '精华' : null);
-    final tagColor = topic.top ? GlobalConstants.primaryColor : Colors.orange;
+    final currentTab = widget.tab;
+    LabelInfo? tagInfo;
+    if (currentTab == 'all') {
+      tagInfo = topic.top
+          ? LabelConstants.of('top')
+          : (topic.good
+              ? LabelConstants.of('good')
+              : (topic.tab!='' ? LabelConstants.of(topic.tab!) : null));
+    } else if (currentTab == 'good') {
+      tagInfo = topic.top
+          ? LabelConstants.of('top')
+          : (topic.good ? LabelConstants.of('good') : null);
+    } else {
+      tagInfo = null;
+    }
     final timeText = formatDateAgo(topic.lastReplyAt);
     return GestureDetector(
       onTap: () {
@@ -64,7 +78,7 @@ class _TopicCardState extends State<TopicCard> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (tagLabel != null)
+                        if (tagInfo != null)
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 6,
@@ -72,15 +86,18 @@ class _TopicCardState extends State<TopicCard> {
                             ),
                             margin: const EdgeInsets.only(right: 6, top: 2),
                             decoration: BoxDecoration(
-                              color: tagColor.withValues(alpha: 0.12),
+                              color: tagInfo.color.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                color: tagColor.withValues(alpha: 0.4),
+                                color: tagInfo.color.withOpacity(0.4),
                               ),
                             ),
                             child: Text(
-                              tagLabel,
-                              style: TextStyle(color: tagColor, fontSize: 11),
+                              tagInfo.text,
+                              style: TextStyle(
+                                color: tagInfo.color,
+                                fontSize: 11,
+                              ),
                             ),
                           ),
                         Expanded(
