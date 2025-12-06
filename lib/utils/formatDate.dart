@@ -9,9 +9,21 @@ void _ensureZhLocale() {
   _timeagoInited = true;
 }
 
+bool _isZh(String locale) {
+  final l = locale.toLowerCase();
+  return l.startsWith('zh');
+}
+
+String _compactZh(String s) {
+  final noSpaces = s.replaceAll(RegExp(r'\s+'), '');
+  return noSpaces;
+}
+
 String formatDateAgo(DateTime dateTime, {String locale = 'zh_CN'}) {
   _ensureZhLocale();
-  return timeago.format(dateTime, locale: locale);
+  if (dateTime.millisecondsSinceEpoch <= 0) return '';
+  final raw = timeago.format(dateTime, locale: locale);
+  return _isZh(locale) ? _compactZh(raw) : raw;
 }
 
 String formatDateAgoFromString(String isoString, {String locale = 'zh_CN'}) {
