@@ -32,7 +32,10 @@ String formatDateAgoFromString(String isoString, {String locale = 'zh_CN'}) {
   return formatDateAgo(dt, locale: locale);
 }
 
-String formatDateAgoFromMilliseconds(int milliseconds, {String locale = 'zh_CN'}) {
+String formatDateAgoFromMilliseconds(
+  int milliseconds, {
+  String locale = 'zh_CN',
+}) {
   final dt = DateTime.fromMillisecondsSinceEpoch(milliseconds);
   return formatDateAgo(dt, locale: locale);
 }
