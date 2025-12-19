@@ -46,7 +46,9 @@ class HttpUtils {
               requestOptions: response.requestOptions,
               response: response,
               type: DioExceptionType.badResponse,
-              message: serverMsg.isNotEmpty ? serverMsg : 'HTTP $statusCode $statusMsg',
+              message: serverMsg.isNotEmpty
+                  ? serverMsg
+                  : 'HTTP $statusCode $statusMsg',
             ),
           );
         },
@@ -110,6 +112,27 @@ class HttpUtils {
         return data['data'];
       }
       final msg = _extractServerError(data);
+      return msg.isNotEmpty ? msg : '请求失败';
+    } catch (e) {
+      if (e is DioException) {
+        return e.message ?? e.toString();
+      }
+      return e.toString();
+    }
+  }
+
+  post(String url, {Map<String, dynamic>? data}) async {
+    try {
+      final response = await _dio.post(url, data: data);
+      final res = response.data;
+      if (res is Map && res['success'] == true) {
+        if (res['data'] is Map) {
+          return res['data'];
+        } else {
+          return res;
+        }
+      }
+      final msg = _extractServerError(res);
       return msg.isNotEmpty ? msg : '请求失败';
     } catch (e) {
       if (e is DioException) {
