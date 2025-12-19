@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class GlobalConstants {
   static const Color primaryColor = Color.fromRGBO(79, 57, 246, 1.0);
+  static const String tokenKey = 'access_token';
+  static const String userInfoKey = 'user_info';
 }
 
 class HttpConstants {
