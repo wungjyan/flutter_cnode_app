@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cnode_app/constants/index.dart';
 import 'package:flutter_cnode_app/models/topics.dart';
-import 'package:flutter_cnode_app/utils/formatDate.dart';
+import 'package:flutter_cnode_app/utils/format_date.dart';
 
 class TopicCard extends StatefulWidget {
   final TopicItem topic;
@@ -23,8 +23,8 @@ class _TopicCardState extends State<TopicCard> {
       tagInfo = topic.top
           ? LabelConstants.of('top')
           : (topic.good
-              ? LabelConstants.of('good')
-              : (topic.tab!='' ? LabelConstants.of(topic.tab!) : null));
+                ? LabelConstants.of('good')
+                : (topic.tab != '' ? LabelConstants.of(topic.tab!) : null));
     } else if (currentTab == 'good') {
       tagInfo = topic.top
           ? LabelConstants.of('top')
