@@ -41,7 +41,12 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(''), surfaceTintColor: Colors.transparent),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(''),
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.white,
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: _isLoading

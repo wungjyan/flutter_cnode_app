@@ -135,6 +135,7 @@ class _TopicCardState extends State<TopicCard> {
                     ),
                     const SizedBox(height: 8),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           topic.author.loginname,
@@ -142,10 +143,6 @@ class _TopicCardState extends State<TopicCard> {
                             color: Colors.grey,
                             fontSize: 12,
                           ),
-                        ),
-                        const Text(
-                          ' · ',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                         Text(
                           '最后回复 $timeText',
