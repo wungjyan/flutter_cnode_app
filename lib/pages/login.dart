@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('登录')),
+      appBar: AppBar(title: const Text('登录'),backgroundColor: Colors.white,),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
