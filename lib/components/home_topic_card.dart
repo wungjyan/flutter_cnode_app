@@ -75,43 +75,63 @@ class _TopicCardState extends State<TopicCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (tagInfo != null)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            margin: const EdgeInsets.only(right: 6, top: 2),
-                            decoration: BoxDecoration(
-                              color: tagInfo.color.withOpacity(0.12),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: tagInfo.color.withOpacity(0.4),
-                              ),
-                            ),
-                            child: Text(
-                              tagInfo.text,
-                              style: TextStyle(
-                                color: tagInfo.color,
-                                fontSize: 11,
-                              ),
-                            ),
-                          ),
-                        Expanded(
-                          child: Text(
+                    Builder(
+                      builder: (context) {
+                        const titleStyle = TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        );
+                        if (tagInfo == null) {
+                          return Text(
                             topic.title,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: titleStyle,
+                          );
+                        }
+                        return RichText(
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          text: TextSpan(
+                            style: titleStyle,
+                            children: [
+                              WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  margin: const EdgeInsets.only(right: 6),
+                                  decoration: BoxDecoration(
+                                    color: tagInfo.color.withValues(
+                                      alpha: 0.12,
+                                    ),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                      color: tagInfo.color.withValues(
+                                        alpha: 0.4,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    tagInfo.text,
+                                    style: TextStyle(
+                                      color: tagInfo.color,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const WidgetSpan(child: SizedBox(width: 2)),
+                              TextSpan(
+                                text: topic.title,
+                                style: TextStyle(color: Colors.black87),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
                     Row(
