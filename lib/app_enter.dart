@@ -3,6 +3,7 @@ import 'package:flutter_cnode_app/api/user.dart';
 import 'package:flutter_cnode_app/pages/main/index.dart';
 import 'package:flutter_cnode_app/pages/login.dart';
 import 'package:flutter_cnode_app/pages/topic_detail.dart';
+import 'package:flutter_cnode_app/pages/user_topics_list.dart';
 import 'package:flutter_cnode_app/store/token_manage.dart';
 import 'package:flutter_cnode_app/store/user_manage.dart';
 
@@ -54,6 +55,13 @@ class _AppEnterState extends State<AppEnter> {
           final id = settings.arguments as String?;
           return MaterialPageRoute(
             builder: (context) => TopicDetailPage(id: id ?? ''),
+            settings: settings,
+          );
+        }
+        if (settings.name == '/user_topics_list') {
+          final flag = settings.arguments as String?;
+          return MaterialPageRoute(
+            builder: (context) => UserTopicsList(flag: flag ?? ''),
             settings: settings,
           );
         }
