@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cnode_app/components/TopicsList.dart';
+import 'package:flutter_cnode_app/components/home_topics_list.dart';
 import 'package:flutter_cnode_app/constants/index.dart';
 
 class HomeView extends StatefulWidget {
@@ -14,14 +14,20 @@ class _HomeViewState extends State<HomeView>
   // tabbar controller
   late TabController _tabController;
 
-  List<Tab> tabs = [Tab(text: '全部'), Tab(text: '精华'), Tab(text: '分享'),Tab(text: '问答')];
+  List<Tab> tabs = [
+    Tab(text: '全部'),
+    Tab(text: '精华'),
+    Tab(text: '分享'),
+    Tab(text: '问答'),
+  ];
   final List<String> _tabCodes = ['all', 'good', 'share', 'ask'];
-
 
   Widget _getTabBars() {
     return TabBar(
       controller: _tabController,
-      overlayColor: WidgetStateProperty.resolveWith((states) => Colors.transparent),
+      overlayColor: WidgetStateProperty.resolveWith(
+        (states) => Colors.transparent,
+      ),
       indicatorColor: GlobalConstants.primaryColor,
       labelColor: GlobalConstants.primaryColor,
       unselectedLabelColor: Colors.black,
@@ -33,7 +39,10 @@ class _HomeViewState extends State<HomeView>
     return Expanded(
       child: TabBarView(
         controller: _tabController,
-        children: List.generate(_tabCodes.length, (index) => TopicsList(tab: _tabCodes[index])),
+        children: List.generate(
+          _tabCodes.length,
+          (index) => TopicsList(tab: _tabCodes[index]),
+        ),
       ),
     );
   }
