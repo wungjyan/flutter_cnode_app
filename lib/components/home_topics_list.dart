@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cnode_app/api/topics.dart';
-import 'package:flutter_cnode_app/components/TopicCard.dart';
+import 'package:flutter_cnode_app/components/home_topic_card.dart';
 import 'package:flutter_cnode_app/models/topics.dart';
 
 class TopicsList extends StatefulWidget {
@@ -11,7 +11,8 @@ class TopicsList extends StatefulWidget {
   State<TopicsList> createState() => _TopicsListState();
 }
 
-class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMixin<TopicsList> {
+class _TopicsListState extends State<TopicsList>
+    with AutomaticKeepAliveClientMixin<TopicsList> {
   List<TopicItem> topicsList = [];
   int _page = 1;
   final int _limit = 20;
@@ -102,7 +103,9 @@ class _TopicsListState extends State<TopicsList> with AutomaticKeepAliveClientMi
       onRefresh: _onRefresh,
       child: ListView.builder(
         key: PageStorageKey('topics_${widget.tab}'),
-        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
         controller: _scrollController,
         itemCount: topicsList.length + 1,
         itemBuilder: (context, index) {
