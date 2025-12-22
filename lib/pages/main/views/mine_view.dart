@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cnode_app/api/user.dart';
+import 'package:flutter_cnode_app/components/simple_topic_item.dart';
 import 'package:flutter_cnode_app/constants/index.dart';
 import 'package:flutter_cnode_app/models/user.dart';
 import 'package:flutter_cnode_app/store/user_manage.dart';
 import 'package:flutter_cnode_app/store/token_manage.dart';
+import 'package:flutter_cnode_app/store/user_topics.dart';
 import 'package:flutter_cnode_app/utils/format_date.dart';
 import 'package:flutter_cnode_app/utils/toast.dart';
+import 'package:get/get.dart';
 
 class MineView extends StatefulWidget {
   const MineView({super.key});
@@ -53,6 +56,8 @@ class _MineViewState extends State<MineView> {
       ToastUtils.showError(context, res);
       return;
     }
+    final userTopics = Get.put(UserTopics(), permanent: true);
+    userTopics.setList(res.recent_topics, res.recent_replies);
     setState(() {
       userDetail = res as UserDetail;
     });
@@ -62,60 +67,24 @@ class _MineViewState extends State<MineView> {
     final display = list.length > 3 ? list.sublist(0, 3) : list;
     return Column(
       children: display.map((topic) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey.shade200,
-                ),
-                clipBehavior: Clip.hardEdge,
-                child: topic.author.avatar_url.isNotEmpty
-                    ? Image.network(
-                        topic.author.avatar_url,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) =>
-                            Image.asset(
-                              'lib/assets/images/default_avatar.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                      )
-                    : Image.asset(
-                        'lib/assets/images/default_avatar.jpg',
-                        fit: BoxFit.cover,
-                      ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      topic.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      formatDateAgo(topic.last_reply_at),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+        return SimpleTopicItem(info: topic);
       }).toList(),
+    );
+  }
+
+  Widget _buildLastReplyBtn(List<Topic> list, String flag) {
+    if (list.length <= 3) return const SizedBox.shrink();
+    return Align(
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, '/user_topics_list', arguments: flag);
+        },
+        child: Text(
+          '查看更多 »',
+          style: TextStyle(color: GlobalConstants.primaryColor, fontSize: 13),
+        ),
+      ),
     );
   }
 
@@ -305,16 +274,7 @@ class _MineViewState extends State<MineView> {
                             const SizedBox(height: 12),
                             _buildTopicList(recentTopics),
                             const SizedBox(height: 8),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '查看更多 »',
-                                style: TextStyle(
-                                  color: GlobalConstants.primaryColor,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
+                            _buildLastReplyBtn(recentTopics, 'recent_topics'),
                           ],
                         ),
                       ),
@@ -355,16 +315,7 @@ class _MineViewState extends State<MineView> {
                             const SizedBox(height: 12),
                             _buildTopicList(recentReplies),
                             const SizedBox(height: 8),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                '查看更多 »',
-                                style: TextStyle(
-                                  color: GlobalConstants.primaryColor,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
+                            _buildLastReplyBtn(recentReplies, 'recent_replies'),
                           ],
                         ),
                       ),
