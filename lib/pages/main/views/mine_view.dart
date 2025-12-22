@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cnode_app/api/user.dart';
 import 'package:flutter_cnode_app/components/simple_topic_item.dart';
+import 'package:flutter_cnode_app/components/to_login_btn.dart';
 import 'package:flutter_cnode_app/constants/index.dart';
 import 'package:flutter_cnode_app/models/user.dart';
 import 'package:flutter_cnode_app/store/user_manage.dart';
@@ -101,25 +102,7 @@ class _MineViewState extends State<MineView> {
 
     if (!isLoggedIn) {
       return Center(
-        child: GestureDetector(
-          onTap: () async {
-            final result = await Navigator.pushNamed(context, '/login');
-            if (result == true) {
-              await _fetchUserDetail();
-            }
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: const Text(
-              "点击登录",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-        ),
+        child: ToLoginBtn(loginSuccess: _fetchUserDetail),
       );
     }
 
