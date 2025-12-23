@@ -72,6 +72,7 @@ class TopicItem {
 
 class TopicDetail extends TopicItem {
   final List<ReplyItem> replies;
+  final bool isCollect;
 
   TopicDetail({
     required super.id,
@@ -87,6 +88,7 @@ class TopicDetail extends TopicItem {
     required super.createAt,
     required super.author,
     required this.replies,
+    required this.isCollect,
   });
 
   factory TopicDetail.fromJson(Map<String, dynamic> json) {
@@ -97,40 +99,45 @@ class TopicDetail extends TopicItem {
       tab: json['tab']?.toString() ?? '',
       content: json['content']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
-      lastReplyAt: DateTime.tryParse(json['last_reply_at']?.toString() ?? '') ??
+      lastReplyAt:
+          DateTime.tryParse(json['last_reply_at']?.toString() ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
       good: (json['good'] as bool?) ?? false,
       top: (json['top'] as bool?) ?? false,
       replyCount: (json['reply_count'] as num?)?.toInt() ?? 0,
       visitCount: (json['visit_count'] as num?)?.toInt() ?? 0,
-      createAt: DateTime.tryParse(json['create_at']?.toString() ?? '') ??
+      createAt:
+          DateTime.tryParse(json['create_at']?.toString() ?? '') ??
           DateTime.fromMillisecondsSinceEpoch(0),
       author: json['author'] != null
           ? TopicAuthor.fromJson(json['author'] as Map<String, dynamic>)
           : TopicAuthor(loginname: '', avatarUrl: ''),
       replies: repliesJson != null
-          ? repliesJson.map((e) => ReplyItem.fromJson(e as Map<String, dynamic>)).toList()
+          ? repliesJson
+                .map((e) => ReplyItem.fromJson(e as Map<String, dynamic>))
+                .toList()
           : [],
+      isCollect: (json['is_collect'] as bool?) ?? false,
     );
   }
 
   factory TopicDetail.empty() => TopicDetail(
-        id: '',
-        authorId: '',
-        tab: '',
-        content: '',
-        title: '',
-        lastReplyAt: DateTime.fromMillisecondsSinceEpoch(0),
-        good: false,
-        top: false,
-        replyCount: 0,
-        visitCount: 0,
-        createAt: DateTime.fromMillisecondsSinceEpoch(0),
-        author: TopicAuthor.empty(),
-        replies: const [],
-      );
+    id: '',
+    authorId: '',
+    tab: '',
+    content: '',
+    title: '',
+    lastReplyAt: DateTime.fromMillisecondsSinceEpoch(0),
+    good: false,
+    top: false,
+    replyCount: 0,
+    visitCount: 0,
+    createAt: DateTime.fromMillisecondsSinceEpoch(0),
+    author: TopicAuthor.empty(),
+    replies: const [],
+    isCollect: false,
+  );
 }
-
 
 class ReplyItem {
   final String id;
