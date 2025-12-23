@@ -13,3 +13,7 @@ cancelCollectTopic(String topicId, String token) async {
     data: {'topic_id': topicId, 'accesstoken': token},
   );
 }
+
+getUserCollectTopics(String loginname) async {
+  return await requestUtil.get('/topic_collect/$loginname');
+}
