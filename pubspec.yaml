@@ -39,6 +39,7 @@ dependencies:
   flutter_html: ^3.0.0
   shared_preferences: ^2.5.4
   get: ^4.7.3
+  flutter_slidable: ^4.0.3
 
 dev_dependencies:
   flutter_test:
